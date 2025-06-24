@@ -18,7 +18,10 @@ public class AutoBoop extends CommandBase {
     private static final List<String> boopList = new ArrayList<>();
     private static final File configFile = new File(Minecraft.getMinecraft().mcDataDir, "autils/autoboop.json");
     private static final Gson gson = new Gson();
-    private static final List<String> boopMessages = Arrays.asList("Boop!", "Booop!", "Booooop!", "Boooooop!", "Booooooop!");
+    private static final int MAX_BOOO_LENGTH = 16;
+    private static final long BOOP_TIMEOUT = 120_000;
+    private static final long DELAY_MS = 500;
+
     private static long lastBoopTime = 0L;
     private static long lastBoopAttemptTime = 0L;
     private static int boopIndex = 0;
@@ -112,25 +115,44 @@ public class AutoBoop extends CommandBase {
         if (message.startsWith("Friend > ") && message.endsWith(" joined.")) {
             String name = message.substring(9, message.length() - 8).trim();
             boolean match = boopList.stream().anyMatch(p -> p.equalsIgnoreCase(name));
-            if (match) {
-                long now = System.currentTimeMillis();
-                if (now - lastBoopTime >= 60000) {
-                    Minecraft.getMinecraft().thePlayer.sendChatMessage("/boop " + name);
+            if (!match) return;
+
+            long now = System.currentTimeMillis();
+
+            if (now - lastBoopTime >= BOOP_TIMEOUT) {
+                sendChat("/boop " + name);
+                boopIndex = 0;
+                lastBoopTime = now;
+            } else {
+                if (now - lastBoopAttemptTime >= BOOP_TIMEOUT) {
                     boopIndex = 0;
-                    lastBoopTime = now;
-                } else {
-                    if (now - lastBoopAttemptTime >= 60000) {
-                        boopIndex = 0;
-                    }
-                    if (boopIndex >= boopMessages.size()) {
-                        boopIndex = 0;
-                    }
-                    String msg = boopMessages.get(boopIndex++);
-                    Minecraft.getMinecraft().thePlayer.sendChatMessage("/w " + name + " " + msg);
                 }
-                lastBoopAttemptTime = now;
+
+                String msg = generateBoopMessage();
+                sendChat("/w " + name + " " + msg);
+                boopIndex++;
             }
+
+            lastBoopAttemptTime = now;
         }
+    }
+
+    private String generateBoopMessage() {
+        int oCount = 2 + (boopIndex * 2);
+        if (oCount > MAX_BOOO_LENGTH) oCount = MAX_BOOO_LENGTH;
+        StringBuilder sb = new StringBuilder("B");
+        for (int i = 0; i < oCount; i++) sb.append("o");
+        sb.append("p!");
+        return sb.toString();
+    }
+
+    private void sendChat(String message) {
+        new Thread(() -> {
+            try {
+                Thread.sleep(DELAY_MS);
+            } catch (InterruptedException ignored) {}
+            Minecraft.getMinecraft().thePlayer.sendChatMessage(message);
+        }).start();
     }
 
     public static List<String> getBoopList() {
