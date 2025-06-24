@@ -38,13 +38,13 @@ public class AutoBoop extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/autoboop <add|remove|list|clear> [player]";
+        return "/autoboop <add/remove/list/clear> [player]";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.addChatMessage(new ChatComponentText("Usage: /autoboop <add|remove|list|clear> [player]"));
+            sender.addChatMessage(new ChatComponentText("Usage: /autoboop <add/remove/list/clear> [player]"));
             return;
         }
 
@@ -99,7 +99,7 @@ public class AutoBoop extends CommandBase {
                 break;
 
             default:
-                sender.addChatMessage(new ChatComponentText("Unknown subcommand. Use /autoboop <add|remove|list|clear>"));
+                sender.addChatMessage(new ChatComponentText("Unknown subcommand. Use /autoboop <add/remove/list/clear>"));
                 break;
         }
     }

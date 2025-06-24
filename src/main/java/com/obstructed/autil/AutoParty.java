@@ -19,7 +19,7 @@ public class AutoParty extends CommandBase {
     private static final File configFile = new File(Minecraft.getMinecraft().mcDataDir, "autils/autoparty.json");
     private static final Gson gson = new Gson();
     private static final long PARTY_TIMEOUT = 120_000;
-    private static final long DELAY_MS = 500;
+    private static final long DELAY_MS = 750;
 
     private static long lastPartyTime = 0L;
 
@@ -35,13 +35,13 @@ public class AutoParty extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/autoparty <add|remove|list|clear> [player]";
+        return "/autoparty <add/remove/list/clear> [player]";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.addChatMessage(new ChatComponentText("Usage: /autoparty <add|remove|list|clear> [player]"));
+            sender.addChatMessage(new ChatComponentText("Usage: /autoparty <add/remove/list/clear> [player]"));
             return;
         }
 
@@ -96,7 +96,7 @@ public class AutoParty extends CommandBase {
                 break;
 
             default:
-                sender.addChatMessage(new ChatComponentText("Unknown subcommand. Use /autoparty <add|remove|list|clear>"));
+                sender.addChatMessage(new ChatComponentText("Unknown subcommand. Use /autoparty <add/remove/list/clear>"));
                 break;
         }
     }
