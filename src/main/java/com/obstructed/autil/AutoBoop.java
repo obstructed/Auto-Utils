@@ -8,18 +8,17 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class AutoBoop extends CommandBase {
     private static final List<String> boopList = new ArrayList<>();
     private static final File configFile = new File(Minecraft.getMinecraft().mcDataDir, "autils/autoboop.json");
     private static final Gson gson = new Gson();
+    private static long lastBoopTime = 0L;
 
     static {
         loadList();
@@ -107,7 +106,13 @@ public class AutoBoop extends CommandBase {
         if (message.startsWith("Friend > ") && message.endsWith(" joined.")) {
             String name = message.substring(9, message.length() - 8).trim();
             if (boopList.contains(name)) {
-                Minecraft.getMinecraft().thePlayer.sendChatMessage("/boop " + name);
+                long now = System.currentTimeMillis();
+                if (now - lastBoopTime >= 60000) {
+                    Minecraft.getMinecraft().thePlayer.sendChatMessage("/boop " + name);
+                    lastBoopTime = now;
+                } else {
+                    Minecraft.getMinecraft().thePlayer.sendChatMessage("/w " + name + " Boop!");
+                }
             }
         }
     }
