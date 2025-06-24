@@ -21,13 +21,11 @@ public class autil {
 
     @SubscribeEvent
     public void onChat(ClientChatReceivedEvent event) {
-        if (message.startsWith("Friend >>") && message.contains(">")) {
-            int endIndex = message.indexOf(">") + 2;
-            String content = message.substring(endIndex).trim();
+        String message = event.message.getUnformattedText();
 
-            if (content.equals("Test")) {
-                Minecraft.getMinecraft().thePlayer.sendChatMessage("Hi!");
-            }
+        if (message.startsWith("Friend > ") && message.endsWith(" joined.")) {
+            String stripped = message.substring(9, message.length() - 8).trim();
+            Minecraft.getMinecraft().thePlayer.sendChatMessage(stripped + " joined.");
         }
     }
 }
