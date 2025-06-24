@@ -50,7 +50,8 @@ public class AutoBoop extends CommandBase {
                     sender.addChatMessage(new ChatComponentText("Usage: /autoboop add <player>"));
                     return;
                 }
-                if (!boopList.contains(args[1])) {
+                String nameToAdd = args[1].toLowerCase();
+                if (!boopList.stream().anyMatch(p -> p.equalsIgnoreCase(nameToAdd))) {
                     boopList.add(args[1]);
                     saveList();
                     sender.addChatMessage(new ChatComponentText("Added " + args[1] + " to AutoBoop list."));
@@ -64,7 +65,9 @@ public class AutoBoop extends CommandBase {
                     sender.addChatMessage(new ChatComponentText("Usage: /autoboop remove <player>"));
                     return;
                 }
-                if (boopList.remove(args[1])) {
+                String nameToRemove = args[1].toLowerCase();
+                boolean removed = boopList.removeIf(p -> p.equalsIgnoreCase(nameToRemove));
+                if (removed) {
                     saveList();
                     sender.addChatMessage(new ChatComponentText("Removed " + args[1] + " from AutoBoop list."));
                 } else {
@@ -105,7 +108,8 @@ public class AutoBoop extends CommandBase {
         String message = event.message.getUnformattedText();
         if (message.startsWith("Friend > ") && message.endsWith(" joined.")) {
             String name = message.substring(9, message.length() - 8).trim();
-            if (boopList.contains(name)) {
+            boolean match = boopList.stream().anyMatch(p -> p.equalsIgnoreCase(name));
+            if (match) {
                 long now = System.currentTimeMillis();
                 if (now - lastBoopTime >= 60000) {
                     Minecraft.getMinecraft().thePlayer.sendChatMessage("/boop " + name);
