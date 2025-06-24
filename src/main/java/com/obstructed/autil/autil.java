@@ -1,6 +1,8 @@
 package com.sami.autils;
 
 import com.sami.autils.commands.AutoBoop;
+import com.sami.autils.commands.AutoParty;
+import com.sami.autils.commands.AutoUtilsCommand;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -16,6 +18,8 @@ public class autil {
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         ClientCommandHandler.instance.registerCommand(new AutoBoop());
+        ClientCommandHandler.instance.registerCommand(new AutoParty());
+        ClientCommandHandler.instance.registerCommand(new autils_cmd());
         System.out.println(NAME + " loaded.");
     }
 }
