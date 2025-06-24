@@ -72,3 +72,9 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
