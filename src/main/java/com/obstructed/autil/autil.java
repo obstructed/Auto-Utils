@@ -2,7 +2,7 @@ package com.sami.autils;
 
 import com.sami.autils.commands.AutoBoop;
 import com.sami.autils.commands.AutoParty;
-import com.sami.autils.commands.AutoUtilsCommand;
+import com.sami.autils.commands.autils_cmd;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;

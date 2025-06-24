@@ -4,7 +4,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 
-public class AutoUtilsCommand extends CommandBase {
+public class autils_cmd extends CommandBase {
     @Override
     public String getCommandName() {
         return "autils";
