@@ -18,7 +18,10 @@ public class AutoBoop extends CommandBase {
     private static final List<String> boopList = new ArrayList<>();
     private static final File configFile = new File(Minecraft.getMinecraft().mcDataDir, "autils/autoboop.json");
     private static final Gson gson = new Gson();
+    private static final List<String> boopMessages = Arrays.asList("Boop!", "Booop!", "Booooop!", "Boooooop!", "Booooooop!");
     private static long lastBoopTime = 0L;
+    private static long lastBoopAttemptTime = 0L;
+    private static int boopIndex = 0;
 
     static {
         loadList();
@@ -113,10 +116,19 @@ public class AutoBoop extends CommandBase {
                 long now = System.currentTimeMillis();
                 if (now - lastBoopTime >= 60000) {
                     Minecraft.getMinecraft().thePlayer.sendChatMessage("/boop " + name);
+                    boopIndex = 0;
                     lastBoopTime = now;
                 } else {
-                    Minecraft.getMinecraft().thePlayer.sendChatMessage("/w " + name + " Boop!");
+                    if (now - lastBoopAttemptTime >= 60000) {
+                        boopIndex = 0;
+                    }
+                    if (boopIndex >= boopMessages.size()) {
+                        boopIndex = 0;
+                    }
+                    String msg = boopMessages.get(boopIndex++);
+                    Minecraft.getMinecraft().thePlayer.sendChatMessage("/w " + name + " " + msg);
                 }
+                lastBoopAttemptTime = now;
             }
         }
     }
