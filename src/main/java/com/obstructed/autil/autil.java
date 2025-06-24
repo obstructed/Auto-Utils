@@ -25,7 +25,7 @@ public class autil {
 
         if (message.startsWith("Friend > ") && message.endsWith(" joined.")) {
             String stripped = message.substring(9, message.length() - 8).trim();
-            Minecraft.getMinecraft().thePlayer.sendChatMessage(stripped + " joined.");
+            Minecraft.getMinecraft().thePlayer.sendChatMessage("/boop " + stripped);
         }
     }
 }
