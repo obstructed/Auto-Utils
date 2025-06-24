@@ -3,10 +3,13 @@ package com.sami.autils.commands;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -20,6 +23,7 @@ public class AutoBoop extends CommandBase {
 
     static {
         loadList();
+        MinecraftForge.EVENT_BUS.register(new AutoBoop());
     }
 
     @Override
@@ -35,7 +39,7 @@ public class AutoBoop extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length == 0) {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiAutoBoopConfig());
+            sender.addChatMessage(new ChatComponentText("Usage: /autoboop <add|remove|list|clear> [player]"));
             return;
         }
 
@@ -97,6 +101,17 @@ public class AutoBoop extends CommandBase {
         return 0;
     }
 
+    @SubscribeEvent
+    public void onChat(ClientChatReceivedEvent event) {
+        String message = event.message.getUnformattedText();
+        if (message.startsWith("Friend > ") && message.endsWith(" joined.")) {
+            String name = message.substring(9, message.length() - 8).trim();
+            if (boopList.contains(name)) {
+                Minecraft.getMinecraft().thePlayer.sendChatMessage("/boop " + name);
+            }
+        }
+    }
+
     public static List<String> getBoopList() {
         return boopList;
     }
@@ -120,20 +135,6 @@ public class AutoBoop extends CommandBase {
             if (loaded != null) boopList.addAll(loaded);
         } catch (IOException e) {
             System.err.println("[AutoBoop] Failed to load autoboop list: " + e.getMessage());
-        }
-    }
-
-    public static class GuiAutoBoopConfig extends GuiScreen {
-        @Override
-        public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-            drawDefaultBackground();
-            drawCenteredString(fontRendererObj, "AutoBoop Config", width / 2, height / 2 - 10, 0xFFFFFF);
-            super.drawScreen(mouseX, mouseY, partialTicks);
-        }
-
-        @Override
-        public boolean doesGuiPauseGame() {
-            return false;
         }
     }
 }
